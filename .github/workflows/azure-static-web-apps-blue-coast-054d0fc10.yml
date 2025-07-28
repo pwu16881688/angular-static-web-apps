@@ -30,6 +30,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.19'
+      - name: Install dependencies and build
+        if: ${{ !inputs.dry_run }}
+        run: |
+          npm ci
+          npm run build
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -43,6 +48,7 @@ jobs:
           app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "dist/angular-static-web-apps" # Built app content directory - optional
+          skip_app_build: true # Skip build since we already built with correct Node version
           ###### End of Repository/Build Configurations ######
       - name: Build Only (Dry Run)
         if: ${{ inputs.dry_run }}
